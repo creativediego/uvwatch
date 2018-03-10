@@ -13,7 +13,7 @@ $(document).ready(function() {
     const precautions = {
 
 
-        "low": "<p class='alert alert-success'>Wear sunscreen SPF 30+, sunglasses.</p>",
+        "low": "<p class='alert alert-success'>Wear sunscreen SPF 30+ and sunglasses.</p>",
         "moderate": "<p class='alert alert-warning'>Wear sunscreen SPF 30+, sunglasses, hat, and protective clothing.</p>",
         "high": "<p class='alert alert-warning'>Wear sunscreen SPF 30+, sunglasses, hat, protective clothing, and seek shade.</p>",
         "very high": "<p class='alert alert-danger'>Wear sunscreen SPF 30+, sunglasses, hat, protective clothing, seek shade, and limit time outside.</p>",
@@ -38,7 +38,6 @@ $(document).ready(function() {
     }
 
 
-    console.log(precautions)
 
     function getLocation() {
 
@@ -108,7 +107,7 @@ $(document).ready(function() {
 
     function recommendVitD(currentUV) {
         currentUV = getUvScale(currentUV);
-        noUVmessage = "<p class='text-center'>No UV present for vitamin D intake</p>"
+        noUVmessage = "<p class='text-center'>Not enough UV present for vitamin D intake</p>"
         vitDMessage = function(vitRange, expRange) {
             expRange = expRange
             return `<p class="text-center">Time for vitamin D intake: <span class="accent">${vitRange} minutes</span> </p> <p class="text-center">Safe time before you burn: <span class="accent">${expRange}</span></p>`
@@ -257,7 +256,7 @@ $(document).ready(function() {
                         $("#vitd-recommendation").html(noUVmessage);
                         break;
                     case "low":
-                        $("#vitd-recommendation").html(vitDMessage("-", safeExposure));
+                        $("#vitd-recommendation").html(noUVmessage);
                         break;
                     case "moderate":
                         $("#vitd-recommendation").html(vitDMessage("60-80", safeExposure));
