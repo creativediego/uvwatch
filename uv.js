@@ -107,7 +107,7 @@ $(document).ready(function() {
 
     function recommendVitD(currentUV) {
         currentUV = getUvScale(currentUV);
-        noUVmessage = "<p class='text-center'>Not enough UV present for vitamin D intake</p>"
+        noUVmessage = "<p class='text-center'>Not enough UV present for an accurate estimate of vitamin D intake.</p>"
         vitDMessage = function(vitRange, expRange) {
             expRange = expRange
             return `<p class="text-center">Time for vitamin D intake: <span class="accent">${vitRange} minutes</span> </p> <p class="text-center">Safe time before you burn: <span class="accent">${expRange}</span></p>`
