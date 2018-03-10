@@ -50,7 +50,6 @@ $(document).ready(function() {
 
 
 
-    //Take UV number and determine which UV danger scale it's on and store in a temp variable
     function getUvScale(currentUV) {
 
         if (currentUV === 0) {
@@ -285,7 +284,6 @@ $(document).ready(function() {
 
 
 
-
     $(document).on("click", "#get-uv", function(e) {
         e.preventDefault();
 
@@ -346,12 +344,9 @@ $(document).ready(function() {
 
 
 
-
-
-
             },
             error: function(response) {
-                // handle error response
+                $("#vitd-recommendation").html("<p class='alert alert-danger'>Error processing your request, please try again.</p>")
             }
         });
     }
