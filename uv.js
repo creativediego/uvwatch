@@ -9,7 +9,7 @@ $(document).ready(function() {
     var latitute;
     var longitute;
 
-
+    //Precaution messages based on UV status
     const precautions = {
 
 
@@ -23,6 +23,7 @@ $(document).ready(function() {
 
     const skinTypes = ["very fair", "fair", "cream white", "olive", "brown", "dark brown/black"]
 
+    //Appends skin type buttons after the user requests current UV index
     function skinTypeButtons() {
         for (i = 0; i < skinTypes.length; i++) {
 
@@ -38,7 +39,7 @@ $(document).ready(function() {
     }
 
 
-
+    //Gets user's current location and calls the function that makes the API call for current UV index
     function getLocation() {
 
         if (navigator.geolocation) {
@@ -50,50 +51,50 @@ $(document).ready(function() {
 
 
 
+    //Takes current UV index from API call and returns a UV status phrase
     function getUvScale(currentUV) {
 
-        if (currentUV === 0) {
+        switch (true) {
 
-            return "completely safe"
-        }
+            case (currentUV === 0):
 
-        if (currentUV >= 1 && currentUV <= 2) {
+                return "completely safe"
 
-            return "low"
-        }
+            case (currentUV >= 1 && currentUV <= 2):
 
-        if (currentUV >= 3 && currentUV <= 5) {
+                return "low"
 
-            return "moderate"
-        }
 
-        if (currentUV >= 6 && currentUV <= 7) {
+            case (currentUV >= 3 && currentUV <= 5):
 
-            return "high"
-        }
+                return "moderate"
 
-        if (currentUV >= 8 && currentUV <= 10) {
 
-            return "very high"
-        }
+            case (currentUV >= 6 && currentUV <= 7):
 
-        if (currentUV > 11) {
+                return "high"
 
-            return "extremely high"
-        }
-        if (currentUV === 0) {
 
-            return "no worries"
+            case (currentUV >= 8 && currentUV <= 10):
+
+                return "very high"
+
+
+            case (currentUV > 11):
+
+                return "extremely high"
+
         }
     }
 
 
+    //Converts exposure time minutes from API call to hours and minutes
     function convertExposureTime(minutes) {
 
         let h = parseInt(minutes / 60);
         let m = minutes % 60;
 
-        if (minutes > 60) {
+        if (minutes >= 60) {
 
             return `${h} hour(s) and ${m} minute(s)`
         } else {
@@ -103,187 +104,91 @@ $(document).ready(function() {
         }
     }
 
-
+    //Takes the current UV index from API call and recommends Vit D and safe exposure times
     function recommendVitD(currentUV) {
-        currentUV = getUvScale(currentUV);
-        noUVmessage = "<p class='text-center'>Not enough UV present for an accurate estimate of vitamin D intake.</p>"
-        vitDMessage = function(vitRange, expRange) {
-            expRange = expRange
-            return `<p class="text-center">Time for vitamin D intake: <span class="accent">${vitRange} minutes</span> </p> <p class="text-center">Safe time before you burn: <span class="accent">${expRange}</span></p>`
 
+        //Runs the function that takes the UV index and converts it to a UV status message
+        let UVStatus = getUvScale(currentUV);
 
-        }
-        switch (skinType) {
+        //Vit D exposure times based on skin types. Skin-type word (e.g. st1) are returned from API call
+        exposureTime = {
 
-            case "st1":
+            "st1": {
+                "low": "15-20",
+                "moderate": "10-15",
+                "high": "5-10",
+                "very high": "2-8",
+                "extremely high": "1-5"
+            },
 
-                switch (currentUV) {
-                    case "completely safe":
-                        $("#vitd-recommendation").html(noUVmessage);
-                        break;
-                    case "low":
-                        $("#vitd-recommendation").html(vitDMessage("15-20", safeExposure));
-                        break;
-                    case "moderate":
-                        $("#vitd-recommendation").html(vitDMessage("10-15", safeExposure));
-                        break;
-                    case "high":
-                        $("#vitd-recommendation").html(vitDMessage("5-10", safeExposure));
-                        break;
-                    case "very high":
-                        $("#vitd-recommendation").html(vitDMessage("2-8", safeExposure));
-                        break;
-                    case "extra high":
-                        $("#vitd-recommendation").html(vitDMessage("1-5", safeExposure));
-                        break;
+            "st2": {
 
+                "low": "20-30",
+                "moderate": "15-20",
+                "high": "10-15",
+                "very high": "5-10",
+                "extremely high": "2-8"
+            },
 
-                }
+            "st3": {
 
-                break;
+                "low": "20-40",
+                "moderate": "20-30",
+                "high": "15-20",
+                "very high": "10-15",
+                "extremely high": "5-10"
+            },
 
-            case "st2":
+            "st4": {
 
-                switch (currentUV) {
-                    case "completely safe":
-                        $("#vitd-recommendation").html(noUVmessage);
-                        break;
-                    case "low":
-                        $("#vitd-recommendation").html(vitDMessage("20-30", safeExposure));
-                        break;
-                    case "moderate":
-                        $("#vitd-recommendation").html(vitDMessage("15-20", safeExposure));
-                        break;
-                    case "high":
-                        $("#vitd-recommendation").html(vitDMessage("10-15", safeExposure));
-                        break;
-                    case "very high":
-                        $("#vitd-recommendation").html(vitDMessage("5-10", safeExposure));
-                        break;
-                    case "extra high":
-                        $("#vitd-recommendation").html(vitDMessage("2-8", safeExposure));
-                        break;
+                "low": "40-60",
+                "moderate": "30-40",
+                "high": "20-30",
+                "very high": "15-20",
+                "extremely high": "10-15"
+            },
+            "st5": {
 
+                "low": "60-80",
+                "moderate": "40-60",
+                "high": "30-40",
+                "very high": "20-30",
+                "extremely high": "15-20"
+            },
+            "st6": {
 
-                }
-
-            case "st3":
-
-                switch (currentUV) {
-                    case "completely safe":
-                        $("#vitd-recommendation").html(noUVmessage);
-                        break;
-                    case "low":
-                        $("#vitd-recommendation").html(vitDMessage("30-40", safeExposure));
-                        break;
-                    case "moderate":
-                        $("#vitd-recommendation").html(vitDMessage("20-30", safeExposure));
-                        break;
-                    case "high":
-                        $("#vitd-recommendation").html(vitDMessage("15-20", safeExposure));
-                        break;
-                    case "very high":
-                        $("#vitd-recommendation").html(vitDMessage("10-15", safeExposure));
-                        break;
-                    case "extra high":
-                        $("#vitd-recommendation").html(vitDMessage("5-10", safeExposure));
-                        break;
-
-
-                }
-
-                break;
-
-            case "st4":
-
-                switch (currentUV) {
-                    case "completely safe":
-                        $("#vitd-recommendation").html(noUVmessage);
-                        break;
-                    case "low":
-                        $("#vitd-recommendation").html(vitDMessage("40-60", safeExposure));
-                        break;
-                    case "moderate":
-                        $("#vitd-recommendation").html(vitDMessage("30-40", safeExposure));
-                        break;
-                    case "high":
-                        $("#vitd-recommendation").html(vitDMessage("20-30", safeExposure));
-                        break;
-                    case "very high":
-                        $("#vitd-recommendation").html(vitDMessage("15-20", safeExposure));
-                        break;
-                    case "extra high":
-                        $("#vitd-recommendation").html(vitDMessage("10-15", safeExposure));
-                        break;
-
-
-                }
-
-                break;
-
-            case "st5":
-
-                switch (currentUV) {
-                    case "completely safe":
-                        $("#vitd-recommendation").html(noUVmessage);
-                        break;
-                    case "low":
-                        $("#vitd-recommendation").html(vitDMessage("60-80", safeExposure));
-                        break;
-                    case "moderate":
-                        $("#vitd-recommendation").html(vitDMessage("40-60", safeExposure));
-                        break;
-                    case "high":
-                        $("#vitd-recommendation").html(vitDMessage("30-40", safeExposure));
-                        break;
-                    case "very high":
-                        $("#vitd-recommendation").html(vitDMessage("20-30", safeExposure));
-                        break;
-                    case "extra high":
-                        $("#vitd-recommendation").html(vitDMessage("15-20", safeExposure));
-                        break;
-
-
-                }
-
-                break;
-
-            case "st6":
-
-                switch (currentUV) {
-                    case "completely safe":
-                        $("#vitd-recommendation").html(noUVmessage);
-                        break;
-                    case "low":
-                        $("#vitd-recommendation").html(noUVmessage);
-                        break;
-                    case "moderate":
-                        $("#vitd-recommendation").html(vitDMessage("60-80", safeExposure));
-                        break;
-                    case "high":
-                        $("#vitd-recommendation").html(vitDMessage("40-60", safeExposure));
-                        break;
-                    case "very high":
-                        $("#vitd-recommendation").html(vitDMessage("30-40", safeExposure));
-                        break;
-                    case "extra high":
-                        $("#vitd-recommendation").html(vitDMessage("20-30", safeExposure));
-                        break;
-                }
-
-                break;
-
+                "low": "",
+                "moderate": "60-80",
+                "high": "40-60",
+                "very high": "30-40",
+                "extremely high": "20-30"
+            },
 
 
         }
 
 
+        //Gets recommended exposure time based on skin type
+        recommendExposureTime = function(skinType) {
+            return exposureTime[skinType][UVStatus]
 
+        }
+
+        //Appends the Vit D and safe exposure time message to the DOM
+        appendVitDMessage = function() {
+            // expRange = expRange
+            let message = `<p class="text-center">Time for vitamin D intake: <span class="accent">${recommendExposureTime(skinType)} minutes</span> </p> <p class="text-center">Safe time before you burn: <span class="accent">${safeExposure}</span></p>`
+            $("#vitd-recommendation").html(message);
+
+        }
+
+
+        appendVitDMessage();
 
     }
 
 
-
+    //User clicks to get current UV index
     $(document).on("click", "#get-uv", function(e) {
         e.preventDefault();
 
@@ -299,6 +204,7 @@ $(document).ready(function() {
 
     });
 
+    //User clicks a skin type and gets vit D and safe exposure time recommendations
     $(document).on("click", ".skin-type", function() {
 
         $("#collapseOne").toggleClass("show");
@@ -313,6 +219,7 @@ $(document).ready(function() {
     });
 
 
+    //Makes an API call for current UV index based on user's current location
     function getUVIndex(position) {
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
@@ -326,8 +233,8 @@ $(document).ready(function() {
             },
             url: url + $.param({
 
-                lat: latitude,
-                lng: longitude
+                lat: -31.45, //latitude,
+                lng: 115.67 //longitude
 
             }),
             success: function(response) {
@@ -335,12 +242,22 @@ $(document).ready(function() {
                 uvScale = getUvScale(currentUV)
                 allExposures = response.result.safe_exposure_time
 
-                //$("#vitd-recommendation").attr("class", "alert alert-info")
+
                 $("#uv-value").text(currentUV);
                 $("#value-status").text(uvScale);
-                $(".card-panel").removeClass("hide");
                 $("#vitd-recommendation").html(precautions[uvScale])
 
+
+                //Display white card where the user selects skin type for vit D recommendations
+                if (uvScale === "completely safe") {
+
+                    $("#vitd-recommendation").append("<p class='text-center'>Not enough UV present for an accurate estimate of vitamin D intake.</p>")
+
+                } else {
+
+                    $(".card-panel").removeClass("hide");
+
+                }
 
 
 

@@ -14,12 +14,14 @@
 <style>
     html,
     body {
-        height: 100%;
+        padding: 0;
+        margin: 0;
     }
     
     body {
         background: linear-gradient(#51B5D5, #38DAD4);
         background-repeat: no-repeat;
+        background-attachment: fixed;
         color: white;
         font-family: 'Open Sans', sans-serif;
         padding: 0 1rem;
@@ -143,8 +145,8 @@
         <div class="col-sm-6">
             <div class="row justify-content-sm-center text-center align-items-center">
                 <div id="uv-status" class="col-12">
-                    <p id="uv-value" class="mb-0">-</p>
-                    <p id="value-status">-</p>
+                    <p id="uv-value" class="mb-0"></p>
+                    <p id="value-status"></p>
                 </div>
 
             </div>
@@ -162,7 +164,7 @@
                     <div class="card-header" id="headingOne">
                         <h5 class="mb-0">
                             <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Select Your Skin Type
+                            select your skin type
                           </button>
                         </h5>
                     </div>
