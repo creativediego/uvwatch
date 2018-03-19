@@ -43,7 +43,7 @@ $(document).ready(function() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(getUVIndex);
         } else {
-            $("#results").text("Geolocation is not supported by this browser.");
+            $("#vitd-recommendation").text("Geolocation is not supported by this browser.");
         }
     }
 
