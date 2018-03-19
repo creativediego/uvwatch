@@ -1,13 +1,11 @@
 $(document).ready(function() {
 
-    var loading = "Loading..."
+    var loading = "Loading...";
     var currentUV;
     var uvScale;
     var skinType;
     var allExposures;
     var safeExposure;
-    var latitute;
-    var longitute;
 
     //Precaution messages based on UV status
     const precautions = {
@@ -19,17 +17,17 @@ $(document).ready(function() {
         "very high": "<p class='alert alert-danger'>Wear sunscreen SPF 30+, sunglasses, hat, protective clothing, seek shade, and limit time outside.</p>",
         "extremely high": "<p class='alert alert-danger'>Wear unscreen SPF 30+, sunglasses, hat, protective clothing, seek shade, and stay inside.</p>"
 
-    }
+    };
 
-    const skinTypes = ["very fair", "fair", "cream white", "olive", "brown", "dark brown/black"]
+    const skinTypes = ["very fair", "fair", "cream white", "olive", "brown", "dark brown/black"];
 
     //Appends skin type buttons after the user requests current UV index
     function skinTypeButtons() {
-        for (i = 0; i < skinTypes.length; i++) {
+        for (let i = 0; i < skinTypes.length; i++) {
 
-            let col = $("<div class='text-center col-6 col-sm-4'>");
-            let icon = $(`<i value="st${i+1}" class="fas fa-user skin-type st${i+1} btn"></i>`)
-            let description = $(`<p>${skinTypes[i]}</p>`)
+            let col = $(`<div class="text-center col-6 col-sm-4">`);
+            let icon = $(`<i value="st${i+1}" class="fas fa-user skin-type st${i+1} btn"></i>`);
+            let description = $(`<p>${skinTypes[i]}</p>`);
             col = $(col).append(icon).append(description);
 
             $("#skin-buttons").append(col);
@@ -58,31 +56,31 @@ $(document).ready(function() {
 
             case (currentUV === 0):
 
-                return "completely safe"
+                return "completely safe";
 
             case (currentUV >= 1 && currentUV <= 2):
 
-                return "low"
+                return "low";
 
 
             case (currentUV >= 3 && currentUV <= 5):
 
-                return "moderate"
+                return "moderate";
 
 
             case (currentUV >= 6 && currentUV <= 7):
 
-                return "high"
+                return "high";
 
 
             case (currentUV >= 8 && currentUV <= 10):
 
-                return "very high"
+                return "very high";
 
 
             case (currentUV > 11):
 
-                return "extremely high"
+                return "extremely high";
 
         }
     }
@@ -96,10 +94,10 @@ $(document).ready(function() {
 
         if (minutes >= 60) {
 
-            return `${h} hour(s) and ${m} minute(s)`
+            return `${h} hour(s) and ${m} minute(s)`;
         } else {
 
-            return `${m} minute(s)`
+            return `${m} minute(s)`;
 
         }
     }
@@ -111,7 +109,7 @@ $(document).ready(function() {
         let UVStatus = getUvScale(currentUV);
 
         //Vit D exposure times based on skin types. Skin-type word (e.g. st1) are returned from API call
-        exposureTime = {
+        let exposureTime = {
 
             "st1": {
                 "low": "15-20",
@@ -165,22 +163,22 @@ $(document).ready(function() {
             },
 
 
-        }
+        };
 
 
         //Gets recommended exposure time based on skin type
-        recommendExposureTime = function(skinType) {
-            return exposureTime[skinType][UVStatus]
+        let recommendExposureTime = function(skinType) {
+            return exposureTime[skinType][UVStatus];
 
-        }
+        };
 
         //Appends the Vit D and safe exposure time message to the DOM
-        appendVitDMessage = function() {
+        let appendVitDMessage = function() {
             // expRange = expRange
-            let message = `<p class="text-center">Time for vitamin D intake: <span class="accent">${recommendExposureTime(skinType)} minutes</span> </p> <p class="text-center">Safe time before you burn: <span class="accent">${safeExposure}</span></p>`
+            let message = `<p class="text-center">Time for vitamin D intake: <span class="accent">${recommendExposureTime(skinType)} minutes</span> </p> <p class="text-center">Safe time before you burn: <span class="accent">${safeExposure}</span></p>`;
             $("#vitd-recommendation").html(message);
 
-        }
+        };
 
 
         appendVitDMessage();
@@ -209,9 +207,9 @@ $(document).ready(function() {
 
         $("#collapseOne").toggleClass("show");
         skinType = $(this).attr("value");
-        safeExposure = allExposures[skinType]
+        safeExposure = allExposures[skinType];
         console.log(safeExposure);
-        safeExposure = convertExposureTime(safeExposure)
+        safeExposure = convertExposureTime(safeExposure);
         recommendVitD(currentUV);
 
 
@@ -221,10 +219,10 @@ $(document).ready(function() {
 
     //Makes an API call for current UV index based on user's current location
     function getUVIndex(position) {
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
 
-        var url = "https://api.openuv.io/api/v1/uv?"
+        var url = "https://api.openuv.io/api/v1/uv?";
         $.ajax({
             type: 'GET',
             dataType: 'json',
@@ -239,19 +237,19 @@ $(document).ready(function() {
             }),
             success: function(response) {
                 currentUV = Math.round(response.result.uv);
-                uvScale = getUvScale(currentUV)
-                allExposures = response.result.safe_exposure_time
+                uvScale = getUvScale(currentUV);
+                allExposures = response.result.safe_exposure_time;
 
 
                 $("#uv-value").text(currentUV);
                 $("#value-status").text(uvScale);
-                $("#vitd-recommendation").html(precautions[uvScale])
+                $("#vitd-recommendation").html(precautions[uvScale]);
 
 
                 //Display white card where the user selects skin type for vit D recommendations
                 if (uvScale === "completely safe") {
 
-                    $("#vitd-recommendation").append("<p class='text-center'>Not enough UV present for an accurate estimate of vitamin D intake.</p>")
+                    $("#vitd-recommendation").append("<p class='text-center'>Not enough UV present for an accurate estimate of vitamin D intake.</p>");
 
                 } else {
 
@@ -263,7 +261,7 @@ $(document).ready(function() {
 
             },
             error: function(response) {
-                $("#vitd-recommendation").html("<p class='alert alert-danger'>Error processing your request, please try again.</p>")
+                $("#vitd-recommendation").html("<p class='alert alert-danger'>Error processing your request, please try again.</p>");
             }
         });
     }
