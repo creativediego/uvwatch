@@ -233,8 +233,8 @@ $(document).ready(function() {
             },
             url: url + $.param({
 
-                lat: -31.45, //latitude,
-                lng: 115.67 //longitude
+                lat: latitude,
+                lng: longitude
 
             }),
             success: function(response) {
